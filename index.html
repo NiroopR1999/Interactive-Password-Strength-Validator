@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Password Validation</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #5bddb2;
+        }
+
+        .wrapper {
+            background: #a0f2f5;
+            width: 450px;
+            padding: 28px;
+            border-radius: 10px;
+        }
+
+        .wrapper .pass-field {
+            height: 65px;
+            width: 100%;
+            position: relative;
+        }
+
+        .pass-field input {
+            width: 100%;
+            height: 100%;
+            padding: 0 17px;
+            outline: none;
+            font-size: 1.3rem;
+            border-radius: 5px;
+            border: 1px solid #f05555;
+        }
+
+        .pass-field i {
+            right: 18px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: #000000;
+            cursor: pointer;
+        }
+
+        .wrapper .content {
+            margin: 20px 0 10px;
+        }
+
+        .content p {
+            font-size: 1.3rem;
+        }
+
+        .content .requirement-list {
+            margin-top: 20px;
+        }
+
+        .requirement-list li {
+            list-style: none;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .requirement-list li i {
+            font-size: 0.6rem;
+            color: #585656;
+            width: 20px;
+        }
+
+        .requirement-list li.valid i {
+            font-size: 1.2rem;
+            color: #04643c;
+        }
+
+        .requirement-list li.valid span {
+            color: #999;
+        }
+
+        .requirement-list li.invalid i {
+            font-size: 1.2rem;
+            color: red;
+        }
+
+        .requirement-list li.invalid span {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="pass-field">
+            <input type="text" placeholder="Create password">
+            <i class="fa-solid fa-eye"></i>
+        </div>
+        <div class="content">
+            <p>Password must contain</p>
+            <ul class="requirement-list">
+                <li>
+                    <i class="fa-solid fa-circle"></i>
+                    <span>At least eight characters length</span>
+                </li>
+                <li>
+                    <i class="fa-solid fa-circle"></i>
+                    <span>At least one number (0...9)</span>
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-circle"></i>
+                    <span>At least one lower case letter (a...z)</span>
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-circle"></i>
+                    <span>At least one special symbol (!...$) </span>
+                </li>
+
+
+                <li>
+                    <i class="fa-solid fa-circle"></i>
+                    <span>At least one uppercase letter (A...Z)</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordInput = document.querySelector(".pass-field input");
+            const eyeIcon = document.querySelector('.pass-field i');
+            const requirementList = document.querySelectorAll('.requirement-list li');
+
+            const requirements = [
+                { regex: /.{8,}/, index: 0 },
+                { regex: /[0-9]/, index: 1 },
+                { regex: /[a-z]/, index: 2 },
+                { regex: /[^A-Za-z0-9]/, index: 3 },
+                { regex: /[A-Z]/, index: 4 },
+            ];
+
+            const updateRequirementItem = (isValid, requirementItem) => {
+                const icon = requirementItem.querySelector('i');
+                if (isValid) {
+                    icon.className = "fa-solid fa-check";
+                    requirementItem.classList.remove("invalid");
+                    requirementItem.classList.add("valid");
+                } else {
+                    icon.className = "fa-solid fa-xmark";
+                    requirementItem.classList.remove("valid");
+                    requirementItem.classList.add("invalid");
+                }
+            };
+
+            const updatePasswordRequirements = () => {
+                requirements.forEach((requirement) => {
+                    const isValid = requirement.regex.test(passwordInput.value);
+                    const requirementItem = requirementList[requirement.index];
+                    updateRequirementItem(isValid, requirementItem);
+                });
+            };
+
+            passwordInput.addEventListener('keyup', updatePasswordRequirements);
+
+            eyeIcon.addEventListener('click', () => {
+                passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+                eyeIcon.className = `fa-solid fa-eye${passwordInput.type === "password" ? "-slash" : ""}`;
+            });
+        });
+
+    </script>
+</body>
+
+</html>
